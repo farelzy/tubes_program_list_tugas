@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timedelta
 
 class Task:
     def __init__(self, name, deadline, description, subject):
@@ -13,9 +14,10 @@ class Task:
         print(f"Deskripsi: {self.description}")
         print(f"Mata Pelajaran: {self.subject}\n")
 
-
 def main():
     tasks = []  # Inisialisasi list untuk menyimpan tugas-tugas
+
+
 
     while True:
         
@@ -24,6 +26,10 @@ def main():
         print("2. Lihat Daftar Tugas")
         print("3. Cari Tugas berdasarkan Mata Pelajaran")
         print("4. Urutkan Tugas berdasarkan Mata Pelajaran")
+        print("5. Urutkan Tugas berdasarkan Deadline")
+        print("6. Perbarui Tugas")
+        print("7. Hapus Tugas")
+        print("8. Keluar")
 
         choice = input("Pilih menu: ")
 
@@ -66,6 +72,69 @@ def main():
             for idx, task in enumerate(sorted_tasks, 1):
                 print(f"Tugas {idx}:")
                 task.display_info()
+
+        elif choice == '5':
+            if not tasks:
+                print("Belum ada tugas yang ditambahkan.")
+            else:
+                sorted_tasks = sorted(tasks, key=lambda x: datetime.strptime(x.deadline, "%Y-%m-%d"))
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print("\n=======Daftar Tugas Urut berdasarkan Deadline=======")
+                for idx, task in enumerate(sorted_tasks, 1):
+                    print(f"Tugas {idx}:")
+                    task.display_info()
+
+        elif choice == '6':
+            if not tasks:
+                print("Belum ada tugas yang ditambahkan.")
+            else:
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print("\n=======Daftar Tugas=======")
+                for idx, task in enumerate(tasks, 1):
+                    print(f"{idx}. {task.name}")
+
+                task_index = int(input("Masukkan nomor tugas yang ingin diperbarui: "))
+                if 1 <= task_index <= len(tasks):
+                    task = tasks[task_index - 1]
+                    print(f"\nData Tugas saat ini:")
+                    task.display_info()
+
+                    print("\nMasukkan data baru untuk tugas ini:")
+                    name = input("Masukkan nama tugas baru (tekan Enter untuk tidak mengubah): ") or task.name
+                    deadline = input("Masukkan deadline baru (tekan Enter untuk tidak mengubah): ") or task.deadline
+                    description = input("Masukkan deskripsi tugas baru (tekan Enter untuk tidak mengubah): ") or task.description
+                    subject = input("Masukkan mata pelajaran baru (tekan Enter untuk tidak mengubah): ") or task.subject
+
+                    task.name = name
+                    task.deadline = deadline
+                    task.description = description
+                    task.subject = subject
+
+                    print("Tugas berhasil diperbarui.")
+                else:
+                    print("Nomor tugas tidak valid.")
+
+        elif choice == '7':
+            if not tasks:
+                print("Belum ada tugas yang ditambahkan.")
+            else:
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print("\n=======Daftar Tugas=======")
+                for idx, task in enumerate(tasks, 1):
+                    print(f"{idx}. {task.name}")
+
+                task_index = int(input("Masukkan nomor tugas yang ingin dihapus: "))
+                if 1 <= task_index <= len(tasks):
+                    deleted_task = tasks.pop(task_index - 1)
+                    print(f"Tugas '{deleted_task.name}' berhasil dihapus.")
+                else:
+                    print("Nomor tugas tidak valid.")
+
+        elif choice == '8':
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print("Program telah selesai atau dihentikan.")
+            break
+        
 
         else:
             print("Pilihan tidak valid. Silakan pilih menu yang tersedia.")
